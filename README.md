@@ -6,11 +6,8 @@ the [Picocomputer 6502](https://picocomputer.github.io) in
 
 <!-- rp6502
 preset: basic
-target: trek
-title: Super Star Trek
-overlay: no
+publish: trek.zip
 frames: 300
-footer: Type a command, then press Enter. XXX resigns.
 -->
 [![Play Super Star Trek](https://rumbledethumps.github.io/trek/trek/screenshot.png)](https://rumbledethumps.github.io/trek/trek/)
 
@@ -22,11 +19,13 @@ Answer `N` to skip the instructions, and type `XXX` to resign.
 
 ## Building and running
 
-The `basic` preset packages BASIC, `tools/basic.rp6502`, with both
-programs into one ROM, `build/basic/trek.rp6502`, and BASIC starts the
-instructions by itself. Delete `tools/basic.rp6502` to fetch the latest
-BASIC release at the next configure. The first configure also downloads
-the emulator into `tools/`.
+The `basic` preset packages BASIC with both programs into one ROM,
+`build/basic/trek.rp6502`, and BASIC starts the instructions by itself.
+The configure fetches BASIC release `build-96e229e`, which
+`CMakeLists.txt` names, because `tests/play.txt` is written for the
+galaxy that this release sets up with `--seed 1`. To move to another
+release, name it there and check the test. The first configure also
+downloads the emulator into `tools/`.
 
 ```bash
 $ cmake --preset basic
@@ -51,6 +50,8 @@ $ ctest --preset basic
 
 ## Web player
 
-The comment above the play link names the preset and the target, and
-`.github/workflows/web.yml` publishes the player to GitHub Pages on each
-push to `main`. See [RP6502-WEB](https://picocomputer.github.io/web.html).
+`rp6502_web()` in `CMakeLists.txt` packages the ROM with `web/index.html`
+into `build/basic/web/trek.zip`; in VS Code, "RP6502 (Web)" plays it in a
+browser. The comment above the play link names the zip, and
+`.github/workflows/web.yml` publishes it to GitHub Pages on each push to
+`main`. See [RP6502-WEB](https://picocomputer.github.io/web.html).
