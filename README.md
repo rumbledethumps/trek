@@ -8,8 +8,12 @@ the [Picocomputer 6502](https://picocomputer.github.io) in
 preset: basic
 target: trek
 title: Super Star Trek
+overlay: no
+frames: 300
 footer: Type a command, then press Enter. XXX resigns.
 -->
+[![Play Super Star Trek](https://rumbledethumps.github.io/trek/trek/screenshot.png)](https://rumbledethumps.github.io/trek/trek/)
+
 [Play it in your browser](https://rumbledethumps.github.io/trek/trek/).
 
 The game is two programs. `src/instructions.bas` prints the instructions
