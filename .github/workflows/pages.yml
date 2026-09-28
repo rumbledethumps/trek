@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir site
           cp stub/rp6502.js stub/rp6502.wasm stub/basic.rp6502 site/
-          cp index.html src/trek_game.bas src/trek_instructions.bas site/
+          cp index.html src/game.bas src/instructions.bas site/
 
       - uses: actions/upload-pages-artifact@v5
         with:

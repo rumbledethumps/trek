@@ -57,12 +57,12 @@
   var CONFIG = {
     title:   'Super Star Trek',         // browser tab title
     rom:     'basic.rp6502',            // the program, next to this file
-    args:    ['-c1', ':TREK_INSTRUCTIONS.BAS'], // capitals on, and the program to run
-    install: ['trek_game.bas', 'trek_instructions.bas'], // read by BASIC as ':name'
+    args:    ['-c1', ':INSTRUCTIONS.BAS'], // capitals on, and the program to run
+    install: ['game.bas', 'instructions.bas'], // read by BASIC as ':name'
     db:      '',                        // saves database, such as 'username-projectname'
     bg:      '000000',                  // letterbox color, six hex digits
     filter:  'sharp',                   // nearest | linear | sharp
-    overlay: 'overlay',                 // 'overlay' turns on the click-to-play template
+    overlay: '',                        // 'overlay' turns on the click-to-play template
     footer:  'footer',                  // 'footer' turns on the footer template
     image:   '',                        // picture shown until the game starts
   };

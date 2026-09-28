@@ -28,7 +28,7 @@
 225 PRINT"                          '----------------'":PRINT
 226 PRINT"                    THE USS ENTERPRISE --- NCC-1701"
 227 PRINT:PRINT:PRINT:PRINT:PRINT
-260 REM CLEAR 600
+260 CLEAR
 270 Z$="                         "
 330 DIM G(8,8),C(9,2),K(3,3),N(3),Z(8,8),D(8)
 370 T=INT(RND(1)*20+20)*100:T0=T:T9=25+INT(RND(1)*10):D0=0:E=3000:E0=E

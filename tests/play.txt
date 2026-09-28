@@ -1,0 +1,87 @@
+# Plays Super Star Trek to the end twice. Run from the repository root:
+#   rp6502-emu --script tests/play.txt --phi2=0 --seed 1 --install src/game.bas
+#     --install src/instructions.bas basic.rp6502 -- -c1 :INSTRUCTIONS.BAS
+# The seed fixes the galaxy, so the course below reaches a Klingon.
+wait "DO YOU NEED INSTRUCTIONS" 600
+type "Y\r"
+wait "Press ENTER" 600
+type "\r"
+wait "Press ENTER" 600
+type "\r"
+wait "Press ENTER" 600
+type "\r"
+wait "Press ENTER" 600
+type "\r"
+wait "GALACTIC REGIONS REFERRED TO IN THE GAME" 600
+wait "Press ENTER" 600
+type "\r"
+wait "Loading, about 17 seconds" 600
+wait "COMMAND" 6000
+type "SRS\r"
+wait "COMMAND" 600
+type "LRS\r"
+wait "COMMAND" 600
+type "SHE\r"
+wait "NUMBER OF UNITS TO SHIELDS" 600
+type "500\r"
+wait "COMMAND" 600
+type "DAM\r"
+wait "COMMAND" 600
+type "TOR\r"
+wait "PHOTON TORPEDO COURSE" 600
+type "1\r"
+wait "TORPEDO MISSED" 600
+wait "COMMAND" 600
+type "COM\r"
+wait "COMPUTER ACTIVE" 600
+type "0\r"
+wait "COMMAND" 600
+type "COM\r"
+wait "COMPUTER ACTIVE" 600
+type "1\r"
+wait "STATUS REPORT" 600
+wait "COMMAND" 600
+type "COM\r"
+wait "COMPUTER ACTIVE" 600
+type "2\r"
+wait "COMMAND" 600
+type "COM\r"
+wait "COMPUTER ACTIVE" 600
+type "3\r"
+wait "COMMAND" 600
+type "COM\r"
+wait "COMPUTER ACTIVE" 600
+type "4\r"
+wait "INITIAL COORDINATES" 600
+type "1,1\r"
+wait "FINAL COORDINATES" 600
+type "4,5\r"
+wait "DISTANCE" 600
+wait "COMMAND" 600
+type "COM\r"
+wait "COMPUTER ACTIVE" 600
+type "5\r"
+wait "THE GALAXY" 600
+wait "COMMAND" 600
+type "NAV\r"
+wait "COURSE (0-9)" 600
+type "4\r"
+wait "WARP FACTOR" 600
+type "1\r"
+wait "COMBAT AREA" 600
+wait "COMMAND" 600
+type "PHA\r"
+wait "NUMBER OF UNITS TO FIRE" 600
+type "1000\r"
+wait "KLINGON DESTROYED" 600
+wait "COMMAND" 600
+type "XXX\r"
+wait "ENTER 'AYE'" 600
+# The second game runs the setup again, which needs the CLEAR on line 260.
+type "AYE\r"
+wait "YOUR ORDERS ARE AS FOLLOWS" 6000
+wait "COMMAND" 6000
+type "XXX\r"
+wait "ENTER 'AYE'" 600
+type "NO\r"
+wait "OK" 600

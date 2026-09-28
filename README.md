@@ -6,10 +6,9 @@ the [Picocomputer 6502](https://picocomputer.github.io) in
 
 [Play it in your browser](https://rumbledethumps.github.io/trek/).
 
-The game is two programs. `src/trek_instructions.bas` prints the
-instructions and ends with `RUN ":TREK_GAME.BAS"`, which loads and runs
-`src/trek_game.bas`. Answer `N` to skip the instructions, and type `XXX`
-to resign.
+The game is two programs. `src/instructions.bas` prints the instructions
+and ends with `RUN ":GAME.BAS"`, which loads and runs `src/game.bas`.
+Answer `N` to skip the instructions, and type `XXX` to resign.
 
 ## Running it
 
@@ -19,13 +18,26 @@ game takes commands only in capitals, and the last argument is the program
 BASIC loads and runs first.
 
 ```bash
-$ rp6502-emu --install src/trek_game.bas --install src/trek_instructions.bas \
-    basic.rp6502 -- -c1 :TREK_INSTRUCTIONS.BAS
+$ rp6502-emu --install src/game.bas --install src/instructions.bas \
+    basic.rp6502 -- -c1 :INSTRUCTIONS.BAS
 ```
 
 `basic.rp6502` is on the
 [Microsoft BASIC releases page](https://github.com/picocomputer/msbasic/releases/latest).
 A Picocomputer installs only ROMs, so the pair runs only in the emulator.
+
+## Testing
+
+`tests/play.txt` is an emulator script that reads the instructions, tries
+every command, fights a Klingon, resigns, and plays a second game, which
+runs the setup again after the `CLEAR` on line 260 of `src/game.bas`.
+`--seed 1` fixes the galaxy that the script is written for.
+
+```bash
+$ rp6502-emu --script tests/play.txt --phi2=0 --seed 1 \
+    --install src/game.bas --install src/instructions.bas \
+    basic.rp6502 -- -c1 :INSTRUCTIONS.BAS
+```
 
 ## Web player
 
