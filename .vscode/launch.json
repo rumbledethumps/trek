@@ -24,8 +24,7 @@
                     "emu"
                 ]
             },
-            "program": "${command:cmake.buildDirectory}/trek.rp6502",
-            "preLaunchTask": "CMake: build",
+            "program": "${command:cmake.launchTargetPath}.rp6502",
             "stopOnEntry": false,
             "stopOnExit": true
         },
@@ -35,12 +34,11 @@
             "request": "launch",
             "console": "integratedTerminal",
             "program": "${workspaceFolder}/tools/rp6502.py",
-            "preLaunchTask": "CMake: build",
             "args": [
                 "-c",
                 "${workspaceFolder}/.rp6502",
                 "run",
-                "${command:cmake.buildDirectory}/trek.rp6502"
+                "${command:cmake.launchTargetPath}.rp6502"
             ],
         },
     ]

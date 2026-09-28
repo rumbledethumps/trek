@@ -2,12 +2,11 @@ cmake_minimum_required(VERSION 3.21)
 
 include(${CMAKE_CURRENT_LIST_DIR}/tools/rp6502.cmake)
 
-project(trek NONE)
+project(trek BASIC)
 
 rp6502_basic(trek src/instructions.bas src/game.bas)
 
 # The play test runs the ROM with no arguments, so autorun.bas starts it.
-# WSL uses the Windows build of the emulator, as the rest of the SDK does.
 enable_testing()
 if(CMAKE_HOST_SYSTEM_VERSION MATCHES "[Mm]icrosoft")
     set(emulator ${RP6502_TOOLS_DIR}/rp6502-emu.exe)

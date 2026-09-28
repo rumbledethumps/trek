@@ -352,6 +352,35 @@ elseif(NOT RP6502_BASIC)
         "or RP6502_BASIC for a BASIC project.")
 endif()
 
+# BASIC is a language to CMake, so a BASIC program is an executable target
+# like a C one, and cmake.launchTargetPath in VS Code finds it the same way.
+if(RP6502_BASIC)
+    set(dir "${CMAKE_BINARY_DIR}/CMakeFiles/rp6502-basic")
+    file(WRITE "${dir}/CMakeDetermineBASICCompiler.cmake" [=[
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+set(CMAKE_BASIC_COMPILER "${Python3_EXECUTABLE}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeBASICCompiler.cmake.in"
+    "${CMAKE_PLATFORM_INFO_DIR}/CMakeBASICCompiler.cmake" @ONLY)
+set(CMAKE_BASIC_COMPILER_ENV_VAR "")
+]=])
+    file(WRITE "${dir}/CMakeBASICCompiler.cmake.in" [=[
+set(CMAKE_BASIC_COMPILER "@CMAKE_BASIC_COMPILER@")
+set(CMAKE_BASIC_COMPILER_LOADED 1)
+set(CMAKE_BASIC_SOURCE_FILE_EXTENSIONS bas;BAS)
+set(CMAKE_BASIC_OUTPUT_EXTENSION .rp6502)
+set(CMAKE_BASIC_COMPILER_ENV_VAR "")
+]=])
+    # The executable is an empty file. The ROM is <TARGET>.rp6502 beside it,
+    # the name a launch configuration makes from the target path, as for C.
+    file(WRITE "${dir}/CMakeBASICInformation.cmake"
+"set(CMAKE_BASIC_COMPILE_OBJECT \"<CMAKE_BASIC_COMPILER> ${RP6502_TOOLS_DIR}/rp6502.py <FLAGS> -o <OBJECT> create <SOURCE>\")
+set(CMAKE_BASIC_LINK_EXECUTABLE \"<CMAKE_BASIC_COMPILER> ${RP6502_TOOLS_DIR}/rp6502.py -o <TARGET>.rp6502 create <LINK_FLAGS> <OBJECTS>\" \"${CMAKE_COMMAND} -E touch <TARGET>\")
+set(CMAKE_BASIC_INFORMATION_LOADED 1)
+")
+    file(WRITE "${dir}/CMakeTestBASICCompiler.cmake" "set(CMAKE_BASIC_COMPILER_WORKS 1 CACHE INTERNAL \"\")\n")
+    list(APPEND CMAKE_MODULE_PATH "${dir}")
+endif()
+
 # cc65 links a flat image at a fixed address;
 # llvm-mos writes the address into the start of its output file.
 function(rp6502_default_address var)
@@ -615,18 +644,17 @@ endfunction()
 #  rp6502_basic(<name> <program> [<program>...])
 #
 # Builds <name>.rp6502 from tools/basic.rp6502 with each program as a
-# ROM asset under its file name, and a target <name> that builds it. At
-# start, BASIC loads and runs the asset autorun.bas, written here to RUN
-# the first program, and one program starts another with
-# RUN "ROM:<file name>". A BASIC project needs no compiler, so its preset
-# sets RP6502_BASIC and it calls project(<name> NONE).
+# ROM asset under its file name, and an executable target <name> that
+# builds it. At start, BASIC loads and runs the asset autorun.bas, written
+# here to RUN the first program, and one program starts another with
+# RUN "ROM:<file name>". The preset of a BASIC project sets RP6502_BASIC,
+# and the project calls project(<name> BASIC).
 #
 function(rp6502_basic name)
     if (NOT ARGN)
         message(FATAL_ERROR "rp6502_basic(<name> <program> [<program>...])")
     endif()
     rp6502_fetch_basic()
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
     set(dir "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${name}.basic")
     list(GET ARGN 0 first)
     get_filename_component(first "${first}" NAME)
@@ -636,7 +664,7 @@ function(rp6502_basic name)
         CONTENT "10 RUN \"ROM:${first}\"\n")
     set(programs ${ARGN} "${dir}/autorun.bas")
     set(names)
-    set(asset_roms)
+    set(sources)
     foreach(program IN LISTS programs)
         get_filename_component(src "${program}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
         get_filename_component(asset "${src}" NAME)
@@ -651,25 +679,14 @@ function(rp6502_basic name)
             message(FATAL_ERROR "rp6502_basic(${name} ...): two programs are named ${key}.")
         endif()
         list(APPEND names "${key}")
-        set(rom "${dir}/${asset}.rp6502")
-        add_custom_command(
-            OUTPUT "${rom}"
-            DEPENDS "${src}"
-            COMMAND "${Python3_EXECUTABLE}" "${RP6502_TOOLS_DIR}/rp6502.py"
-                    -a "${asset}" -o "${rom}" create "${src}"
-            VERBATIM
-        )
-        list(APPEND asset_roms "${rom}")
+        set_source_files_properties("${src}" PROPERTIES
+            LANGUAGE BASIC COMPILE_OPTIONS "-a;${asset}")
+        list(APPEND sources "${src}")
     endforeach()
-    set(out "${CMAKE_CURRENT_BINARY_DIR}/${name}.rp6502")
-    add_custom_command(
-        OUTPUT "${out}"
-        DEPENDS "${RP6502_TOOLS_DIR}/basic.rp6502" ${asset_roms}
-        COMMAND "${Python3_EXECUTABLE}" "${RP6502_TOOLS_DIR}/rp6502.py"
-                -o "${out}" create "${RP6502_TOOLS_DIR}/basic.rp6502" ${asset_roms}
-        VERBATIM
-    )
-    add_custom_target(${name} ALL DEPENDS "${out}")
+    add_executable(${name} ${sources})
+    set_target_properties(${name} PROPERTIES LINKER_LANGUAGE BASIC SUFFIX "")
+    target_link_options(${name} PRIVATE "${RP6502_TOOLS_DIR}/basic.rp6502")
+    set_property(TARGET ${name} APPEND PROPERTY LINK_DEPENDS "${RP6502_TOOLS_DIR}/basic.rp6502")
 endfunction()
 
 # Give CMake the addresses a header defines.
