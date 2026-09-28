@@ -216,20 +216,15 @@ function(rp6502_fetch_emulator)
     endforeach()
 endfunction()
 
-# BASIC from the latest release of RP6502_BASIC_REPO, checked
-# against that release's SHA256SUMS. Given MISSING, fetches only when
-# tools/ lacks it, and a failure stops the configure, because a BASIC
-# project builds nothing without it. An update keeps the old copy on a
-# failure.
+# tools/basic.rp6502 is committed with a BASIC project, so it can be
+# replaced with another build. When it is missing, the latest release of
+# RP6502_BASIC_REPO is fetched and checked against that release's
+# SHA256SUMS, and a failure stops the configure, because a BASIC project
+# builds nothing without it.
 function(rp6502_fetch_basic)
     set(out "${RP6502_TOOLS_DIR}/basic.rp6502")
-    if("MISSING" IN_LIST ARGN AND EXISTS "${out}")
+    if(EXISTS "${out}")
         return()
-    endif()
-    if("MISSING" IN_LIST ARGN)
-        set(level FATAL_ERROR)
-    else()
-        set(level NOTICE)
     endif()
     set(base "https://github.com/${RP6502_BASIC_REPO}/releases/latest/download")
     message(STATUS "Fetching tools/basic.rp6502")
@@ -251,8 +246,7 @@ function(rp6502_fetch_basic)
     endif()
     file(REMOVE "${sums}")
     if(NOT hash)
-        message(${level} "No BASIC: cannot fetch ${base}/SHA256SUMS")
-        return()
+        message(FATAL_ERROR "No BASIC: cannot fetch ${base}/SHA256SUMS")
     endif()
     file(DOWNLOAD "${base}/basic.rp6502" "${out}.tmp"
         STATUS status
@@ -264,8 +258,7 @@ function(rp6502_fetch_basic)
     list(GET status 1 text)
     if(NOT code EQUAL 0)
         file(REMOVE "${out}.tmp")
-        message(${level} "No BASIC: cannot fetch ${base}/basic.rp6502\n${text}")
-        return()
+        message(FATAL_ERROR "No BASIC: cannot fetch ${base}/basic.rp6502\n${text}")
     endif()
     file(RENAME "${out}.tmp" "${out}")
 endfunction()
@@ -335,9 +328,6 @@ endif()
 if(RP6502_TOOLS_FETCHED)
     rp6502_hook_tasks_json()
     rp6502_fetch_emulator()
-    if(EXISTS "${RP6502_TOOLS_DIR}/basic.rp6502")
-        rp6502_fetch_basic()
-    endif()
 endif()
 
 if(CMAKE_SCRIPT_MODE_FILE)
@@ -635,7 +625,7 @@ function(rp6502_basic name)
     if (NOT ARGN)
         message(FATAL_ERROR "rp6502_basic(<name> <program> [<program>...])")
     endif()
-    rp6502_fetch_basic(MISSING)
+    rp6502_fetch_basic()
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     set(dir "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${name}.basic")
     list(GET ARGN 0 first)

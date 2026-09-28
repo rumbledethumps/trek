@@ -18,10 +18,11 @@ Answer `N` to skip the instructions, and type `XXX` to resign.
 
 ## Building and running
 
-The `basic` preset needs no compiler. It packages BASIC with both
-programs into one ROM, `build/basic/trek.rp6502`, and BASIC starts the
-instructions by itself. The first configure downloads the emulator and
-`basic.rp6502` into `tools/`.
+The `basic` preset needs no compiler. It packages BASIC,
+`tools/basic.rp6502`, with both programs into one ROM,
+`build/basic/trek.rp6502`, and BASIC starts the instructions by itself.
+Delete `tools/basic.rp6502` to fetch the latest BASIC release at the next
+configure. The first configure also downloads the emulator into `tools/`.
 
 ```bash
 $ cmake --preset basic
