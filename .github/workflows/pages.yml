@@ -24,9 +24,14 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Make the site
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           mkdir site
-          cp stub/rp6502.js stub/rp6502.wasm stub/basic.rp6502 site/
+          gh release download --repo picocomputer/rp6502 --pattern '*-itch.io.zip' --output web.zip
+          unzip -j web.zip rp6502.js rp6502.wasm -d site
+          gh release download --repo picocomputer/msbasic --pattern basic.rp6502 --dir site
           cp index.html src/game.bas src/instructions.bas site/
 
       - uses: actions/upload-pages-artifact@v5
