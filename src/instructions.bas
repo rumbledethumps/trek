@@ -1,6 +1,6 @@
 10 REM INSTRUCTIONS FOR "SUPER STARTREK"  MAR 5, 1978
 15 REM PAGED FOR A 30-ROW SCREEN, THEN RUNS THE GAME
-20 PRINT CHR$(12);:FOR I=1 TO 10:PRINT:NEXT I
+20 FOR I=1 TO 8:PRINT:NEXT I
 21 PRINT TAB(21);"*************************************"
 22 PRINT TAB(21);"*                                   *"
 23 PRINT TAB(21);"*                                   *"
