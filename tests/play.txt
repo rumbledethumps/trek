@@ -1,6 +1,4 @@
-# Plays Super Star Trek to the end twice. Run from the repository root:
-#   rp6502-emu --script tests/play.txt --phi2=0 --seed 1 --install src/game.bas
-#     --install src/instructions.bas basic.rp6502 -- -c1 :INSTRUCTIONS.BAS
+# Plays Super Star Trek to the end twice; ctest --preset basic runs it.
 # The seed fixes the galaxy, so the course below reaches a Klingon.
 wait "DO YOU NEED INSTRUCTIONS" 600
 type "Y\r"
