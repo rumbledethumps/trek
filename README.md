@@ -1,66 +1,36 @@
-# RP6502 Project Template
+# Super Star Trek
 
-Scaffolding for a new Picocomputer 6502 software project. It builds with
-either 6502 compiler, cc65 or llvm-mos, and switching between them is one
-setting. Three "Hello, world!" examples are included to start from:
+Super Star Trek, the 1978 BASIC game by Mike Mayfield and Bob Leedom, on
+the [Picocomputer 6502](https://picocomputer.github.io) in
+[Microsoft BASIC](https://github.com/picocomputer/msbasic).
 
- * `src/main.c` — C, and builds with either compiler.
- * `src/main-cc65.s` — assembly for cc65, which uses the ca65 syntax.
- * `src/main-llvm-mos.s` — the same program in llvm-mos assembly.
+[Play it in your browser](https://rumbledethumps.github.io/trek/).
 
-Make sure `CMakeLists.txt` points to the one you want, then delete the others.
-The two assembly files pick up where the C runtime leaves off, so they read
-alike; only the assembler directives differ.
+The game is two programs. `src/trek_instructions.bas` prints the
+instructions and ends with `RUN ":TREK_GAME.BAS"`, which loads and runs
+`src/trek_game.bas`. Answer `N` to skip the instructions, and type `XXX`
+to resign.
 
-### Requirements:
- * CMake 3.21 or newer
- * Python 3
- * Make or Ninja
- * [cc65 or llvm-mos](https://github.com/picocomputer?view_as=public).
-   Install both if you want to try both.
+## Running it
 
-The install steps for Windows, macOS and Linux are in
-[RP6502-SDK](https://picocomputer.github.io/sdk.html#sdk-install), along with
-the rest of the SDK documentation.
-
-### Use the template:
-Go to the [GitHub template](https://github.com/picocomputer/rp6502-sdk) and
-select "Use this template" then "Create a new repository". Don't fork it: a
-fork stays linked to this repository and includes its history, while "Use this
-template" makes a new repository with a clean history. Then clone the new
-repository.
+Both programs are installed on the null drive, where BASIC reads each one
+as `:name`, in any case. `-c1` keeps the keyboard in capitals, because the
+game takes commands only in capitals, and the last argument is the program
+BASIC loads and runs first.
 
 ```bash
-$ git clone [path_to_github]
-$ cd [to_where_it_cloned]
+$ rp6502-emu --install src/trek_game.bas --install src/trek_instructions.bas \
+    basic.rp6502 -- -c1 :TREK_INSTRUCTIONS.BAS
 ```
 
-### Updating the tools:
-`tools/` holds the CMake and Python scripts that the SDK runs. Update them with
-the "RP6502: update tools" task (Terminal > Run Task), or with:
+`basic.rp6502` is on the
+[Microsoft BASIC releases page](https://github.com/picocomputer/msbasic/releases/latest).
+A Picocomputer installs only ROMs, so the pair runs only in the emulator.
 
-```bash
-$ cmake -P tools/rp6502.cmake
-```
+## Web player
 
-### Updating an older project:
-Projects made before this template merged cc65 and llvm-mos have their compiler
-wired into the top of `CMakeLists.txt`, and a `tools/` that predates any of
-this. Start by copying this template's `tools/rp6502.cmake` over yours. That
-name used to be the cc65 toolchain file; it is now the small script that
-fetches everything, and the toolchain it replaces comes back as
-`tools/cc65-toolchain.cmake` on the first configure.
-
-Then replace everything above `project()` with:
-
-```cmake
-cmake_minimum_required(VERSION 3.21)
-
-include(${CMAKE_CURRENT_LIST_DIR}/tools/rp6502.cmake)
-```
-
-Delete `tools/CMakeLists.txt` and the `add_subdirectory(tools)` line that
-pulled it in — the `include()` above replaces both. Copy `CMakePresets.json`
-from this template as well; that is where the compiler is chosen now. Old
-projects called `rp6502_executable()` with the address their compiler happened
-to use, and `DATA default RESET default` works under both.
+`index.html` plays the game in a browser. In its `CONFIG`, `rom` is
+`basic.rp6502`, `install` lists the two programs, and `args` holds the
+arguments above. GitHub Actions publishes it to GitHub Pages on each push
+to `main`, with `.github/workflows/pages.yml`. See
+[RP6502-WEB](https://picocomputer.github.io/web.html).
