@@ -4,7 +4,10 @@ include(${CMAKE_CURRENT_LIST_DIR}/tools/rp6502.cmake)
 
 project(trek BASIC)
 
-rp6502_basic(trek BASIC build-96e229e src/instructions.bas src/game.bas)
+add_executable(trek)
+rp6502_asset(trek instructions.bas src/instructions.bas)
+rp6502_asset(trek game.bas src/game.bas)
+rp6502_basic(trek BASIC build-96e229e instructions.bas)
 rp6502_web(trek PAGE web/index.html)
 
 # The play test runs the ROM with no arguments, so autorun.bas starts it.
