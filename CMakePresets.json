@@ -20,7 +20,8 @@
         {
             "name": "basic",
             "displayName": "basic",
-            "configurePreset": "basic"
+            "configurePreset": "basic",
+            "targets": ["all"]
         }
     ],
     "testPresets": [
