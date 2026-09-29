@@ -12,6 +12,7 @@ rp6502_basic(trek BASIC build-96e229e instructions.bas)
 rp6502_web(trek CONFIG [[
     title: 'Super Star Trek',
     border: '1em',
+    overlay: '',
     footer: 'Type a command, then press Enter. XXX resigns.',
 ]])
 
