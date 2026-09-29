@@ -50,8 +50,10 @@ $ ctest --preset basic
 
 ## Web player
 
-`rp6502_web()` in `CMakeLists.txt` packages the ROM with `web/index.html`
-into `build/basic/web/trek.zip`; in VS Code, "RP6502 (Web)" plays it in a
-browser. The comment above the play link names the zip, and
+`rp6502_web()` in `CMakeLists.txt` packages the ROM into
+`build/basic/web/trek.zip`, with the page settings in its `CONFIG`; in VS
+Code, "RP6502 (Web)" plays it in a browser. Until a release of the
+emulator has the footer and the border, the web zip is
+`tools/rp6502-web.zip`, a build of the rp6502 `ngweb` branch. The comment above the play link names the zip, and
 `.github/workflows/web.yml` publishes it to GitHub Pages on each push to
 `main`. See [RP6502-WEB](https://picocomputer.github.io/web.html).
